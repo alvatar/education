@@ -1,0 +1,284 @@
+\documentclass[11pt]{article}
+\usepackage{amssymb, amscd}
+\usepackage[utf8]{inputenc}
+\title{Ejercicios de Scheme (I)\linebreak Ingeniería en Desarrollo de Contenidos Digitales\linebreak Prácticas}
+\author{Álvaro Castro-Castilla}
+\date{Febrero 2012}
+\begin{document}
+\maketitle
+
+
+\section{Algoritmos con listas}
+\begin{enumerate}
+  \item Selecciona un elemento con un índice, contando desde la derecha
+    \newline \textit{(define (list-ref-right l k) ...)}
+
+  \item ¿Cómo seleccionamos un elemento con un índice contando desde la derecha empleando una función definida en R5RS?
+
+  \item Imagina que una lista es circular, es decir, que una vez que llegamos al último elemento, vuelve a comenzar. ¿Cómo haríamos que un algoritmo como el anterior funcionase con una de estas listas? Dicho de otro modo, si $k$ (el índice) es mayor que la longitud de la lista, tendría que comenzar de nuevo desde el principio.
+    \\[3mm]
+    Este tipo de comportamiento puede ser útil al trabajar con imágenes. Intenta pensar por qué.
+    \\[3mm]
+    \textit{(define (list-ref-circular l k) ...)}
+
+  \item Busca, si no lo recuerdas, qué es un \textit{palíndrome} y aplica el concepto a una lista de elementos. Crea una función que te diga si una lista es un palíndrome o no.
+    \\[3mm]
+    \textit{(define (palindrome? l) ...)}
+
+  \item Rota una lista hacia la izquierda \textit{k veces}, cogiendo la cabeza y poniéndola en la cola.
+\begin{verbatim}
+    (rotate-right k lis)
+    (rotate-left '(a b c d e) 1) -> '(b c d e a)
+\end{verbatim}
+
+  \item Rota una lista hacia la derecha \textit{k veces}, cogiendo el último elemento y poniéndolo en la cabeza.
+\begin{verbatim}
+    (rotate-right k lis)
+    (rotate-right '(a b c d e) 1) -> '(e a b c d)
+\end{verbatim}
+
+  \item Inserta un elemento en una posición \textit{n} determinada
+\begin{verbatim}
+    (insert-at new k lis)
+    (insert-at 'N 2 '(a b c d e f)) -> '(a b N c d e f)
+\end{verbatim}
+
+  \item Inserta un elemento a la izquierda de todos los elementos que coincidan con el argumento \textit{e}.
+\begin{verbatim}
+    (insert-left new e lis)
+    (insert-left 'N c '(a b c d e c f)) -> '(a b N c d e N c f)
+\end{verbatim}
+
+  \item Haz el algoritmo equivalente recursivo, para que trabaje en listas de distinta profundidad.
+\begin{verbatim}
+    (insert-left* new e lis)
+    (insert-left* 'N c '(a (b c) d e ((c f)))) -> '(a (b N c) d e ((N c f)))
+\end{verbatim}
+
+  \item Inserta un elemento a la derecha de todos los elementos que coincidan con el argumento \textit{e}.
+\begin{verbatim}
+    (insert-right new e lis)
+    (insert-right 'N c '(a b c d e c f)) -> '(a b c N d e c N f)
+\end{verbatim}
+
+  \item Haz el algoritmo equivalente recursivo, para que trabaje en listas de distinta profundidad.
+\begin{verbatim}
+    (insert-right* new e lis)
+    (insert-right* 'N c '(a (b c) d e ((c f)))) -> '(a (b c N) d e ((c N f)))
+\end{verbatim}
+
+  \item Elimina el elemento que esté situado en la posición \textit{k} de la lista.
+\begin{verbatim}
+    (remove-at k lis)
+    (remove-at 3 '(a b c d e f)) -> '(a b c e f)
+\end{verbatim}
+
+  \item Construye una nueva lista que repita cada elemento un número determinado de veces
+\begin{verbatim}
+    (replicate n l)
+    (replicate '(a b c) 2) -> '(a a a b b b c c c)
+\end{verbatim}
+
+  \item Agrupa todos los elementos iguales y consecutivos de una lista en una sublista. La nueva lista contendrá el conunto de nuevas sublistas.
+\begin{verbatim}
+    (pack l)
+    (pack '(a a a a b b c c c)) -> '((a a a a) (b b) (c c c))
+\end{verbatim}
+
+  \item Haz \textit{n} sublistas de una lista, con igual número de elementos. Si no es divisible, el último grupo tendrá menos elementos.
+\begin{verbatim}
+    (n-groups n l)
+    (n-groups 2 '(a b c d e f g)) -> '((a b c d) (e f g))
+\end{verbatim}
+
+  \item Haz grupos con \textit{n} elementos cada uno, partiendo de una lista. Si no se pueden poner \textit{n} elementos en todas las sublistas, la última tendrá menos.
+\begin{verbatim}
+    (group n l)
+    (group 2 '(a b c d e f g)) -> '((a b) (c d) (e f) (g))
+\end{verbatim}
+
+  \item Al igual que en el anterior ejercicio, construye un algoritmo que agrupo en sublistas, pero dando una lista con un serie de número que indican la cantidad de elementos que debe haber en cada sublista (en el mismo orden). Propón qué podría hacer el algoritmo en caso de que no coincida el número de elementos indicados por \textit{g} con el número de elementos de \textit{l}.
+\begin{verbatim}
+    (group g l)
+    (group '(2 3 1 1) '(a b c d e f g)) -> '((a b) (c d e) (f) (g))
+\end{verbatim}
+
+  \item Ordena una lista de números de menor a mayor. No importa el método que emplees: halla tú un método aunque no sea muy eficiente.
+    \\[3mm]
+    \textit{(define (my-sort l) ...)}
+    \\[3mm]
+    Cuando lo hayas realizado, observa que hay un punto de la función en el que estás empleando la función $<$ o $>$. Esto es inevitable, porque si no, no podrías saber que número es mayor de cada dos que compares. Por eso, a esto se le llama comparador.
+    \\[3mm]
+    Extrae el comparador como un elemento independiente, es decir, como un argumento de la función, y úsala con este nuevo argumento que se introduce desde fuera. A ese comparador lo llamaremos \textit{less?}
+    \\[3mm]
+    \textit{(define (my-sort l less?) ...)}
+    \\[3mm]
+    Ahora investiga un algoritmo de ordenación (el que quieras) e impleméntalo tú mismo. Algunos ejemplos:
+    \\[3mm]
+    \textit{(define (quicksort l less?) ...)}
+    \newline \textit{(define (mergesort l less?) ...)}
+    \newline \textit{(define (introsort l less?) ...)}
+
+\end{enumerate}
+
+\section{Matemáticas}
+\begin{enumerate}
+  \item Calcula la media aritmética de una lista de números.
+    \\[3mm]
+    \textit{(define (mean l) ...)}
+
+  \item De una lista de números extraer una lista que contenga solo el elemento que más veces se repite. Extraemos una lista por si hay varios elementos que se repiten igual número de veces (en cuyo caso esa lista de salida contendrá todos esos elementos "empatados" a máximas repeticiones).
+    Intenta imaginar un caso en el que usarías esto para un problema real y descríbelo.
+    \\[3mm]
+    Esto se llama "moda", y si el resultado te da dos números, el conjunto de números inicial es bimodal; si te da 3, trimodal... todos ellos son "multimodales".
+    \\[3mm]
+    \textit{(define (mode l) ...)}
+
+  \item Realizar una función que reciba una lista de números y calcule el número que, una vez ordenados, se encuentra a medio camino entre el menor y el mayor.
+    \\[3mm]
+    A esto se le denomina "mediana", y es el valor medio de un conjunto de valores ordenados. Intenta buscar un caso práctico de la vida real en el que hayas empleado este cálculo de manera consciente o no.
+    \\[3mm]
+    Primero emplea una lista de números que ya esté ordenada. Luego preocúpate de ordenarla con el algoritmo que has diseñado anteriormente \textit{(sort)}.
+    \\[3mm]
+    \textit{(define (median l) ...)}
+
+  \item Implementa la media geométrica:
+    \\[3mm]
+    {\Large
+    $G(x_1,\dots,x_n) = \sqrt[n]{x_1 \cdot \dots \cdot x_n}$
+  }
+    \\[3mm]
+    Investiga para qué se emplea esta media.
+    \\[3mm]
+    \textit{(define (geometric-mean l) ...)}
+
+  \item Implementa la media harmónica:
+    \\[3mm]
+    {\Large
+    $H(x_1,\dots,x_n) = \frac{n}{\frac{1}{x_1} + \dots + \frac{1}{x_n}}$
+  }
+    \\[3mm]
+    Investiga para qué se emplea esta media.
+    \\[3mm]
+    \textit{(define (harmonic-mean l) ...)}
+
+  \item A las tres medias: aritmética, geométrica y harmónica se las denomina \textit{medias pitagóricas}.
+    \\[3mm]
+    Cambia el nombre de la media a \textit{arithmetic-mean} para que no haya confusión con las otras.
+    \\[3mm]
+    \textit{(define (arithmetic-mean l) ...)}
+
+  \item Crea una función que calcule la media ponderada, recibiendo una lista de parejas. Cada pareja contiene dos elementos: un \textit{car} con el valor y un \textit{cdr} con un peso.
+    \\[3mm]
+    {\Large
+    $W(x_1,\dots,x_n) = \frac{x_1w_1 + \dots + x_nw_n}{w_1 + \dots + w_n}$
+  }
+    \\[3mm]
+    \textit{(define (weighted-mean l-pairs) ...)}
+    \\[3mm]
+    con l-pairs = 
+    \textit{'((1 . 0.5) (4 . 0.8) (3 . 0.4))}
+    \\[3mm]
+    Describe un caso sencillo en el que esto se emplee en la vida real
+
+  \item La media cuadrática se describe como {\Large $Q(x_1,\dots,x_n) = \sqrt \frac{x_1^2 + \dots + x_n^2}{n}$ }
+    impleméntala usando una de las funciones anteriores
+    \\[3mm]
+    \textit{(define (quadratic-mean l) ...)}
+
+  \item \textbf{Extra:} crea una versión de todas las medias para que vayan acumulando su valor y que cada vez que se llama tenga en cuenta los valores anteriores. Esta versión debe incorporar una forma de que se pueda reiniciar, es decir, borrar todos los valores anteriores.
+
+  \item Calcula el rango medio de un conjunto de números.
+    \\[3mm]
+    {\Large
+    $M(x_1,\dots,x_n) = \frac{min + max}{2}$
+  }
+    \\[3mm]
+    \textit{(define (mid-range l-pairs) ...)}
+\end{enumerate}
+
+  % \item Crea una función que genere todas las combinaciones de n números que van del 0 a m. Es decir, dado $n=3$ y $m=5$, que genere:
+    % \begin{verbatim}
+    % (produce-combinations n m)
+    % (produce-combinations 3 5) ->
+      % '(0 1 3)
+       % (0 1 4)
+       % (0 2 3)
+       % (0 2 4)
+       % (0 3 4)
+       % (1 2 3)
+       % (1 2 4)
+       % (1 3 4)
+       % (2 3 4))}
+    % \end{verbatim}
+
+  % \item Investiga qué es el Método o esquema de Horner para la evaluación de polinomios e impleméntalo.
+    % \\[3mm]
+    % \textit{(define (eval-polynomial/horner l n) ...)}
+
+% (define (binomial-coefficient n k)
+  % (error "Not implemented"))
+
+% (define (permutations l)
+  % (error "Not implemented"))
+
+% (define (combinations n l)
+  % (error "Not implemented"))
+
+% (define (non-continuous-sequences l)
+  % (error "Not implemented"))
+
+% (define (power-set l)
+  % (error "Not implemented"))
+
+% ;;; '(0 4 8 6 2 5) -> '(0 1 2 3 4 5 6 7 8 7 6 5 4 3 2 3 4 5)
+
+% (define (range-extract l)
+  % (error "Not implemented"))
+
+% (define (encode-run-length l)
+  % (error "Not implemented"))
+
+% (define (decode-run-length l)
+  % (error "Not implemented"))
+
+% (define (encode-run-length/single l)
+  % (error "Not implemented"))
+
+% (define (decode-run-length/single l)
+  % (error "Not implemented"))
+
+% (define (geometric-median pseq)
+
+% \section{Geometría}
+% \begin{enumerate}
+  % \item Crea una función para calcular el producto escalar de dos listas
+    % \\[3mm]
+    % \textit{(define (dot-product l n) ...)}
+
+  % \item Crea una función para calcular el producto vectorial de dos listas
+    % \\[3mm]
+    % \textit{(define (cross-product l n) ...)}
+% \end{enumerate}
+
+% \section{Strings}
+
+% equilibrated-parenthesis?
+
+% strip-comments
+
+% increment-numerical-string
+
+% sort-words
+
+% string-repeat
+
+% string-reverse
+
+% string-run-length-encode
+
+% string-run-length-decode
+
+% \section{Entrada/Salida}
+
+\end{document}
