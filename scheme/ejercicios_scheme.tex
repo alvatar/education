@@ -28,79 +28,105 @@
   \item Rota una lista hacia la izquierda \textit{k veces}, cogiendo la cabeza y poniéndola en la cola.
 \begin{verbatim}
     (rotate-right k lis)
-    (rotate-left '(a b c d e) 1) -> '(b c d e a)
+    (rotate-left '(a b c d e) 1)
+    =>
+    '(b c d e a)
 \end{verbatim}
 
   \item Rota una lista hacia la derecha \textit{k veces}, cogiendo el último elemento y poniéndolo en la cabeza.
 \begin{verbatim}
     (rotate-right k lis)
-    (rotate-right '(a b c d e) 1) -> '(e a b c d)
+    (rotate-right '(a b c d e) 1)
+    =>
+    '(e a b c d)
 \end{verbatim}
 
   \item Inserta un elemento en una posición \textit{n} determinada
 \begin{verbatim}
     (insert-at new k lis)
-    (insert-at 'N 2 '(a b c d e f)) -> '(a b N c d e f)
+    (insert-at 'N 2 '(a b c d e f))
+    =>
+    '(a b N c d e f)
 \end{verbatim}
 
   \item Inserta un elemento a la izquierda de todos los elementos que coincidan con el argumento \textit{e}.
 \begin{verbatim}
     (insert-left new e lis)
-    (insert-left 'N c '(a b c d e c f)) -> '(a b N c d e N c f)
+    (insert-left 'N c '(a b c d e c f))
+    =>
+    '(a b N c d e N c f)
 \end{verbatim}
 
   \item Haz el algoritmo equivalente recursivo, para que trabaje en listas de distinta profundidad.
 \begin{verbatim}
     (insert-left* new e lis)
-    (insert-left* 'N c '(a (b c) d e ((c f)))) -> '(a (b N c) d e ((N c f)))
+    (insert-left* 'N c '(a (b c) d e ((c f))))
+    =>
+    '(a (b N c) d e ((N c f)))
 \end{verbatim}
 
   \item Inserta un elemento a la derecha de todos los elementos que coincidan con el argumento \textit{e}.
 \begin{verbatim}
     (insert-right new e lis)
-    (insert-right 'N c '(a b c d e c f)) -> '(a b c N d e c N f)
+    (insert-right 'N c '(a b c d e c f))
+    =>
+    '(a b c N d e c N f)
 \end{verbatim}
 
   \item Haz el algoritmo equivalente recursivo, para que trabaje en listas de distinta profundidad.
 \begin{verbatim}
     (insert-right* new e lis)
-    (insert-right* 'N c '(a (b c) d e ((c f)))) -> '(a (b c N) d e ((c N f)))
+    (insert-right* 'N c '(a (b c) d e ((c f))))
+    =>
+    '(a (b c N) d e ((c N f)))
 \end{verbatim}
 
   \item Elimina el elemento que esté situado en la posición \textit{k} de la lista.
 \begin{verbatim}
     (remove-at k lis)
-    (remove-at 3 '(a b c d e f)) -> '(a b c e f)
+    (remove-at 3 '(a b c d e f))
+    =>
+    '(a b c e f)
 \end{verbatim}
 
   \item Construye una nueva lista que repita cada elemento un número determinado de veces
 \begin{verbatim}
     (replicate n l)
-    (replicate '(a b c) 2) -> '(a a a b b b c c c)
+    (replicate '(a b c) 2)
+    =>
+    '(a a a b b b c c c)
 \end{verbatim}
 
   \item Agrupa todos los elementos iguales y consecutivos de una lista en una sublista. La nueva lista contendrá el conunto de nuevas sublistas.
 \begin{verbatim}
     (pack l)
-    (pack '(a a a a b b c c c)) -> '((a a a a) (b b) (c c c))
+    (pack '(a a a a b b c c c))
+    =>
+    '((a a a a) (b b) (c c c))
 \end{verbatim}
 
   \item Haz \textit{n} sublistas de una lista, con igual número de elementos. Si no es divisible, el último grupo tendrá menos elementos.
 \begin{verbatim}
     (n-groups n l)
-    (n-groups 2 '(a b c d e f g)) -> '((a b c d) (e f g))
+    (n-groups 2 '(a b c d e f g))
+    =>
+    '((a b c d) (e f g))
 \end{verbatim}
 
   \item Haz grupos con \textit{n} elementos cada uno, partiendo de una lista. Si no se pueden poner \textit{n} elementos en todas las sublistas, la última tendrá menos.
 \begin{verbatim}
     (group n l)
-    (group 2 '(a b c d e f g)) -> '((a b) (c d) (e f) (g))
+    (group 2 '(a b c d e f g))
+    =>
+    '((a b) (c d) (e f) (g))
 \end{verbatim}
 
   \item Al igual que en el anterior ejercicio, construye un algoritmo que agrupo en sublistas, pero dando una lista con un serie de número que indican la cantidad de elementos que debe haber en cada sublista (en el mismo orden). Propón qué podría hacer el algoritmo en caso de que no coincida el número de elementos indicados por \textit{g} con el número de elementos de \textit{l}.
 \begin{verbatim}
     (group g l)
-    (group '(2 3 1 1) '(a b c d e f g)) -> '((a b) (c d e) (f) (g))
+    (group '(2 3 1 1) '(a b c d e f g))
+    =>
+    '((a b) (c d e) (f) (g))
 \end{verbatim}
 
   \item Ordena una lista de números de menor a mayor. No importa el método que emplees: halla tú un método aunque no sea muy eficiente.
@@ -181,7 +207,8 @@
     \\[3mm]
     Describe un caso sencillo en el que esto se emplee en la vida real
 
-  \item La media cuadrática se describe como {\Large $Q(x_1,\dots,x_n) = \sqrt \frac{x_1^2 + \dots + x_n^2}{n}$ }
+  \item La media cuadrática se describe como 
+    \newline {\Large $Q(x_1,\dots,x_n) = \sqrt \frac{x_1^2 + \dots + x_n^2}{n}$ }
     impleméntala usando una de las funciones anteriores
     \\[3mm]
     \textit{(define (quadratic-mean l) ...)}
