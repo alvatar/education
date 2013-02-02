@@ -1,0 +1,48 @@
+\documentclass[14pt,a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\renewcommand{\theFancyVerbLine}{\sffamily
+\textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+\oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\title{- I -\linebreak El lienzo de dibujo y las formas básicas}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Tutoriales online relacionados}
+
+\begin{enumerate}
+   \item \href{http://processing.org/learning/drawing/}{Sistema de coordenadas y formas} 
+   \item \href{http://go.yuri.at/p5/tutorial/}{Tutorial básico en castellano}
+\end{enumerate}
+
+\section{Bloques básicos de código que emplearemos}
+
+
+\section{Ejemplos}
+
+\begin{minted}[linenos=true,bgcolor=bg]{c}
+int main() {
+  printf("hello, world");
+  return 0;
+}
+\end{minted}
+
+\end{document}
