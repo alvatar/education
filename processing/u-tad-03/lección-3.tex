@@ -1,0 +1,197 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- III -\linebreak Variables}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Definición de una variable
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      /* Declarar una variable es definir su "tipo" y su
+       * "nombre"
+       *
+       * Tipo de la variable: int (número entero)
+       * Nombre de la variable: mi-variable */
+      int mi-variable;
+
+      /* Asignar un valor a una variable es ponerle
+       * contenido.
+       *
+       * El contenido tiene que ser del tipo que hemos
+       * declarado anteriormente: si la variable es de
+       * tipo "int", el contenido tendrá que ser un
+       * número entero */
+      mi-variable = 50;
+
+      /* Podemos hacer las dos cosas al mismo tiempo:
+       * definir la variable y asignarle valor */
+      int mi-variable = 50;
+    \end{minted}
+
+  \item Realizar operaciones y asignar a las variables
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      // "x" vale 20
+      int x = 20;
+
+      // "y" valdrá 30
+      int y = x + 10;
+
+      // "z" valdrá 30 + 20
+      int z = x + y;
+    \end{minted}
+
+  \newpage
+  \item Agrupación de las operaciones
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      /* Lo que está entre paréntesis se realiza primero:
+       * En este caso el resultado será igual a 10 * 2 */
+      int x = (4 + 6) * 2;
+
+       /* En estos dos casos será igual a 4 + 12. El segundo
+        * de ellos por la precedencia de la multiplicación
+        * sobre la suma (como en matemáticas) */
+      int x = 4 + (6 * 2);
+      int x = 4 + 6 * 2;
+    \end{minted}
+
+  \item Orden de las definiciones
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      /* Error: usamos "y" antes de definirla,
+       * la variable todavía no existe */
+      int x = y + 20;
+      int y = 10;
+    \end{minted}
+
+  \item Ámbito de las definiciones (scope)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      // Variable global (definida fuera de setup/draw)
+      int globalVar = 10;
+
+      void setup() {
+        // Variable local de setup
+        int localVarSetup = 20;
+      }
+
+      void draw() {
+        // Variable local de draw
+        int localVarDraw = 30;
+
+        /* Es posible usar la variable global y la local
+         * a tu ámbito */
+        int y = globalVar + localVarDraw;
+
+        // ...pero no la variable local de otro ámbito
+        int z = localVarSetup; // Error!!
+      }
+    \end{minted}
+
+\end{enumerate}
+
+
+\newpage
+\section{Elementos de código que emplearemos}
+\begin{enumerate}
+  \item Tipos de datos "números enteros" (\textbf{INT}eger)
+
+    \mint[bgcolor=bg]{java} |int|
+  \item Tipos de datos "coma flotante", es decir, con decimales (\textbf{FLOAT}ing point)
+
+    \mint[bgcolor=bg]{java} |float|
+  \item Suma
+
+    \mint[bgcolor=bg]{java} |1 + 199|
+  \item Resta
+
+    \mint[bgcolor=bg]{java} |27 - 7|
+  \item Multiplicación
+
+    \mint[bgcolor=bg]{java} |33 * 29|
+  \item División
+
+    \mint[bgcolor=bg]{java} |121 / 11|
+  \item Abreviaturas
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+      /* Sumar el valor 2 y asignar el resultado
+       * (o cualquier otro) a la variable "x"
+       * Equivale a x = x + 2; */
+      x += 2;
+      /* Restar el valor 2 y asignar el resultado
+       * (o cualquier otro) a la variable "x"
+       * Equivale a x = x - 2; */
+      x -= 2;
+
+      /* Sumar 1 y asignar el resultado
+       * x = x + 1;
+       * Muy útil para incrementar un valor
+       * paso a paso */
+      x++;
+
+      /* Restar 1 y asignar el resultado
+       * x = x - 1;
+       * Muy útil para decrementar un valor
+       * paso a paso */
+      x--;
+    \end{minted}
+\end{enumerate}
+
+\end{document}
