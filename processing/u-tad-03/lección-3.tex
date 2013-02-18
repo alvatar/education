@@ -62,86 +62,86 @@
   \item Definición de una variable
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      /* Declarar una variable es definir su "tipo" y su
-       * "nombre"
-       *
-       * Tipo de la variable: int (número entero)
-       * Nombre de la variable: mi-variable */
-      int mi-variable;
+/* Declarar una variable es definir su "tipo" y su
+ * "nombre"
+ *
+ * Tipo de la variable: int (número entero)
+ * Nombre de la variable: mi-variable */
+int mi-variable;
 
-      /* Asignar un valor a una variable es ponerle
-       * contenido.
-       *
-       * El contenido tiene que ser del tipo que hemos
-       * declarado anteriormente: si la variable es de
-       * tipo "int", el contenido tendrá que ser un
-       * número entero */
-      mi-variable = 50;
+/* Asignar un valor a una variable es ponerle
+ * contenido.
+ *
+ * El contenido tiene que ser del tipo que hemos
+ * declarado anteriormente: si la variable es de
+ * tipo "int", el contenido tendrá que ser un
+ * número entero */
+mi-variable = 50;
 
-      /* Podemos hacer las dos cosas al mismo tiempo:
-       * definir la variable y asignarle valor */
-      int mi-variable = 50;
+/* Podemos hacer las dos cosas al mismo tiempo:
+ * definir la variable y asignarle valor */
+int mi-variable = 50;
     \end{minted}
 
   \item Realizar operaciones y asignar a las variables
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      // "x" vale 20
-      int x = 20;
+// "x" vale 20
+int x = 20;
 
-      // "y" valdrá 30
-      int y = x + 10;
+// "y" valdrá 30
+int y = x + 10;
 
-      // "z" valdrá 30 + 20
-      int z = x + y;
+// "z" valdrá 30 + 20
+int z = x + y;
     \end{minted}
 
   \newpage
   \item Agrupación de las operaciones
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      /* Lo que está entre paréntesis se realiza primero:
-       * En este caso el resultado será igual a 10 * 2 */
-      int x = (4 + 6) * 2;
+/* Lo que está entre paréntesis se realiza primero:
+ * En este caso el resultado será igual a 10 * 2 */
+int x = (4 + 6) * 2;
 
-       /* En estos dos casos será igual a 4 + 12. El segundo
-        * de ellos por la precedencia de la multiplicación
-        * sobre la suma (como en matemáticas) */
-      int x = 4 + (6 * 2);
-      int x = 4 + 6 * 2;
+/* En estos dos casos será igual a 4 + 12. El segundo
+ * de ellos por la precedencia de la multiplicación
+ * sobre la suma (como en matemáticas) */
+int x = 4 + (6 * 2);
+int x = 4 + 6 * 2;
     \end{minted}
 
   \item Orden de las definiciones
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      /* Error: usamos "y" antes de definirla,
-       * la variable todavía no existe */
-      int x = y + 20;
-      int y = 10;
+/* Error: usamos "y" antes de definirla,
+ * la variable todavía no existe */
+int x = y + 20;
+int y = 10;
     \end{minted}
 
   \item Ámbito de las definiciones (scope)
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      // Variable global (definida fuera de setup/draw)
-      int globalVar = 10;
+// Variable global (definida fuera de setup/draw)
+int globalVar = 10;
 
-      void setup() {
-        // Variable local de setup
-        int localVarSetup = 20;
-      }
+void setup() {
+  // Variable local de setup
+  int localVarSetup = 20;
+}
 
-      void draw() {
-        // Variable local de draw
-        int localVarDraw = 30;
+void draw() {
+  // Variable local de draw
+  int localVarDraw = 30;
 
-        /* Es posible usar la variable global y la local
-         * a tu ámbito */
-        int y = globalVar + localVarDraw;
+  /* Es posible usar la variable global y la local
+   * a tu ámbito */
+  int y = globalVar + localVarDraw;
 
-        // ...pero no la variable local de otro ámbito
-        int z = localVarSetup; // Error!!
-      }
+  // ...pero no la variable local de otro ámbito
+  int z = localVarSetup; // Error!!
+}
     \end{minted}
 
 \end{enumerate}
@@ -171,26 +171,26 @@
   \item Abreviaturas
 
     \begin{minted}[linenos=true,bgcolor=bg]{java}
-      /* Sumar el valor 2 y asignar el resultado
-       * (o cualquier otro) a la variable "x"
-       * Equivale a x = x + 2; */
-      x += 2;
-      /* Restar el valor 2 y asignar el resultado
-       * (o cualquier otro) a la variable "x"
-       * Equivale a x = x - 2; */
-      x -= 2;
+/* Sumar el valor 2 y asignar el resultado
+ * (o cualquier otro) a la variable "x"
+ * Equivale a x = x + 2; */
+x += 2;
+/* Restar el valor 2 y asignar el resultado
+ * (o cualquier otro) a la variable "x"
+ * Equivale a x = x - 2; */
+x -= 2;
 
-      /* Sumar 1 y asignar el resultado
-       * x = x + 1;
-       * Muy útil para incrementar un valor
-       * paso a paso */
-      x++;
+/* Sumar 1 y asignar el resultado
+ * x = x + 1;
+ * Muy útil para incrementar un valor
+ * paso a paso */
+x++;
 
-      /* Restar 1 y asignar el resultado
-       * x = x - 1;
-       * Muy útil para decrementar un valor
-       * paso a paso */
-      x--;
+/* Restar 1 y asignar el resultado
+ * x = x - 1;
+ * Muy útil para decrementar un valor
+ * paso a paso */
+x--;
     \end{minted}
 \end{enumerate}
 
