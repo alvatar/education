@@ -1,0 +1,234 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{Conceptos fundamentales de Scheme}
+\author{U-tad\\ Ingeniería en Desarollo de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Estructuras básicas}
+\begin{enumerate}
+  \item Crear variables
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(define my-variable 'value)
+    \end{minted}
+
+  \item Crear funciones
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; Opción 1, igual que una variable pero con lambda
+(define my-function
+  (lambda (parameter1 parameter2)
+    (+ parameter1 parameter2)))
+
+;; Opción 2 (sintaxis reducida)
+(define (my-function parameter1 parameter2)
+  (+ parameter1 parameter2))
+    \end{minted}
+
+\end{enumerate}
+
+\section{Conceptos básicos}
+\begin{enumerate}
+  \item Principio de sustitución
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(+ 2 2)
+;; Equivale a su resultado de computar la expresión:
+4
+;; Es decir, se sustituye la expresión por su resultado
+
+(+ 3 (* 5 7) (- 7 2))
+;; ...todo ello se puede sustituir por:
+43
+    \end{minted}
+
+\pagebreak
+  \item Devolución de valores
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(define (my-func a b)
+  (+ a b)
+  (* a b))
+(my-func 4 5)       ===> 20
+;; Siguiendo el principio de sustitución, el resultado será
+;; 20 descartándose el resultado de la expresión anterior,
+;; ya que (* a b) es lo último que queda al ejecutar el
+;; código dentro de la función
+
+;; Otro ejemplo:
+(begin
+ (println "Hola ")
+ (println "mundo")
+ (string-append "Adiós " "mundo"))
+;; Este código ejecutará las tres instrucciónes, pero el
+;; resultado que la función devolverá será el resultado de
+;; computar la última expresión ===> "Adiós mundo"
+    \end{minted}
+
+\end{enumerate}
+
+\section{Estructuras de control}
+\begin{enumerate}
+  \item if
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(if (null? l) ; Test
+    (println "list is null") ; si test es true
+    (println "list is NOT null")) ; si test es false
+    \end{minted}
+
+  \item when (if + begin)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; When equivale a un if en el que sólo se considera el
+;; caso "true", ejecutándose todas las instrucciones a
+;; continuación. En caso de que el test de #f, unless
+;; devuelve esto
+(when (test) ; Test
+      (println "It was true") ; Expresión 1
+      (println "so all this is executed") ; Expresión 2...
+      'but-this-is-returned) ; Se devuelve este resultado
+    \end{minted}
+
+  \item unless (if-not + begin)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; When equivale a un if en el que sólo se considera el
+;; caso "false", ejecutándose todas las instrucciones a
+;; continuación. En caso contrario, es decir que el test
+;; resulte en "true", unless devuelve #f
+(unless (test) ; Test
+        (println "It was false") ; Expresión 1
+        (println "so all this is executed") ; Expresión 2...
+        'but-this-is-returned) ; Se devuelve este resultado
+    \end{minted}
+
+  \item cond
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(cond
+  ((null? l) ; test 1
+   (println "list is null")) ; si test 1 es true
+  ((eq? (car l) 'a) ; test 2
+   (println "first element is 'a")) ; si test 2 es true
+  (else ; si no se cumple ninguna de las anteriores
+   (println "none of the clauses were met")))
+    \end{minted}
+
+  \item case
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+(case (get-a-symbol)
+  ((a b) ; ¿es el resultado de (get-a-symbol) 'a o 'b?
+   (println "a or b")) ; si es 'a o 'b
+  ((c) ; ¿es el resultado de (get-a-symbol) 'c?
+   (println "first element is 'c")) ; si es 'c
+  (else ; si no se cumple ninguna de las anteriores
+   (println "none of the clauses were met")))
+    \end{minted}
+
+\end{enumerate}
+
+\pagebreak
+\section{Objetos}
+\begin{enumerate}
+  \item Definition de un tipo
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; El tipo "robot" tendrá 3 campos o atributos:
+;;   - head
+;;   - arms
+;;   - legs
+(define-structure my-robot head arms legs)
+    \end{minted}
+
+  \item Creación de una instancia MAKE-[TIPO]
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; Crear un robot, en la variable que se llame "my-robot"
+;; y hacer que head, arms y legs tengan valores:
+(define my-robot
+  (make-robot 'big-head 'short-arms 'mechanic-legs))
+    \end{minted}
+
+  \item Predicado (test: es esto un robot?) [TIPO]?
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; Comprobar si los siguientes valores o variables son
+;; robots
+(robot? my-robot)   ===> #t
+(robot? 1234)       ===> #f
+    \end{minted}
+
+  \item Acceso a los campos o atributos [TIPO]-[CAMPO]
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; Extraer o acceder al campo "arms" de la instancia
+;; "my-robot"
+(robot-arms my-robot)   ===> 'short-arms
+    \end{minted}
+
+  \item Modificación de campos [TIPO]-[CAMPO]-SET!
+
+    \begin{minted}[linenos=true,bgcolor=bg]{scheme}
+;; Modificar el campo "arms" de "my-robot" con el valor
+;; 'long-arms
+(robot-arms-set! robot 'long-arms)
+    \end{minted}
+
+\end{enumerate}
+
+\end{document}
