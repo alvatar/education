@@ -1,0 +1,149 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- VI -\linebreak Respuesta e interacción}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Comprobación del estado del ratón
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+void setup() {
+  smooth();
+  strokeWeight(30);
+}
+void draw() {
+  if (mousePressed) { // (Igual que mousePressed == true)
+    stroke(0);
+  } else {
+    stroke(102);
+  }
+  ellipse(mouseX - 20, mouseY - 20, 40, 40);
+}
+    \end{minted}
+
+  \item Funciones de evento
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+void mousePressed() {
+  fill(255);
+}
+
+void mouseReleased() {
+  fill(0);
+}
+    \end{minted}
+
+\end{enumerate}
+
+\pagebreak
+
+\section{Elementos de código que emplearemos}
+\begin{enumerate}
+  \item Detección del botón pulsado
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+if (mousePressed) {
+  if (mouseButton == LEFT) {
+    stroke(0);
+  } else {
+    stroke(255);
+  }
+}
+    \end{minted}
+
+  \item Pulsación de teclas
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+int robotPositionX = 0;
+int robotPositionY = 0;
+
+if (keyPressed) {
+  if ((key == 'a') || (key == 'A')) {
+    robotPositionX -= 2;
+  } else if ((key == 'd') || (key == 'D')) {
+    robotPositionX += 2;
+  } else if ((key == 'w') || (key == 'W')) {
+    robotPositionY += 2;
+  } else if ((key == 's') || (key == 'S')) {
+    robotPositionY -= 2;
+  }
+}
+    \end{minted}
+      
+  \item Detección de teclas mediante \textbf{keycodes}
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+int robotPositionX = 0;
+int robotPositionY = 0;
+
+if (keyPressed) {
+  if (keyCode == LEFT) {
+    robotPositionX -= 2;
+  } else if (keyCode == RIGHT) {
+    robotPositionX += 2;
+  } else if (keyCode == UP) {
+    robotPositionY += 2;
+  } else if (keyCode == DOWN) {
+    robotPositionY -= 2;
+  }
+}
+    \end{minted}
+
+\end{enumerate}
+
+\end{document}
