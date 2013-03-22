@@ -1,0 +1,131 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- VII -\linebreak Respuesta e interacción}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Elementos de código que emplearemos}
+\begin{enumerate}
+  \item Emplear imágenes
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// La variable debe ser global
+PImage img;
+
+// Cargar la imagen (sólo se hace una vez)
+void setup() {
+  size(500, 500);
+  img = loadImage("archivo-imagen.jpg");
+}
+
+// Mostrar la imagen
+void draw() {
+  background(0);
+  image(img, 0, 0);
+}
+    \end{minted}
+
+  \item Mostrar texto y emplear fuentes
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// La variable debe ser global
+PFont font;
+
+// Cargar y preparar las fuentes
+void setup() {
+  size(500, 500);
+  font = loadFont("AndaleMono-36.vlw");
+  textFont(font);
+}
+
+// Mostrar texto con esta fuente
+void draw() {
+  background(100);
+  textSize(36);
+  text("!Hola mundo!", 100, 100);
+}
+    \end{minted}
+      
+  \item Strings
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Los Strings o cadenas de caracteres son el tipo de variable
+// que nos permitirán guardar texto
+String myText = "Hola mundo";
+// ...para posteriormente usarlo y/o modificarlo
+text( myText + "!" );
+    \end{minted}
+
+  \item Formas vectoriales diseñadas con Illustrator o Photoshop
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+PShape myDrawing;
+
+void setup() {
+  size(480, 120);
+  smooth();
+  myDrawing = loadShape("archivo_vectorial.svg");
+}
+
+void draw() {
+  background(0);
+  shape(myDrawing, mouseX, mouseY);
+}
+    \end{minted}
+
+\end{enumerate}
+
+\end{document}
