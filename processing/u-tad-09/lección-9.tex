@@ -1,0 +1,125 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- IX -\linebreak Movimiento (II)}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Movimiento ondular
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Ángulo
+float angle = 0.0;
+// Desplazamiento inicial
+float offset = 200;
+// Amplitud del movimiento ondular
+float amplitude = 40;
+// Velocidad del movimiento ondular
+float speed = 0.05;
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  background(0);
+
+  // Ecuación del movimiento ondular
+  float y = offset + sin(angle) * amplitude;
+
+  ellipse( 200, y, 40, 40);
+
+  /* Sumamos la velocidad al ángulo, en lugar de a
+     la posición */
+  angle += speed;
+}
+    \end{minted}
+
+\newpage
+  \item Movimiento circular
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Ángulo
+float angle = 0.0;
+// Desplazamientos del origen del movimiento
+float offsetX = 150;
+float offsetY = 250;
+// Amplitud del movimiento
+float amplitude = 60;
+// Velocidad del movimiento
+float speed = 0.05;
+
+void setup() {
+  size(500, 500);
+  smooth();
+}
+
+void draw() {
+  // Ecuaciones del movimiento circular
+  float x = offsetX + cos(angle) * amplitude;
+  float y = offsetY + sin(angle) * amplitude;
+
+  ellipse( x, y, 40, 40);
+
+  // Sumamos la velocidad al ángulo
+  angle += speed;
+}
+    \end{minted}
+
+\end{enumerate}
+
+\end{document}

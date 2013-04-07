@@ -1,0 +1,227 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- VIII -\linebreak Movimiento (I)}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Movimiento
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Empezamos en posición X = 0
+int positionX = 0;
+// La velocidad de avance será de 1 pixel por fotograma
+int speedX = 1;
+
+void draw() {
+  /* La velocidad es el cambio de posición en el tiempo,
+     por lo tanto tendremos que aplicar ese cambio en cada
+     fotograma, sumando la velocidad a la posición, para
+     obtener la nueva posición en cada fotograma.
+     Si la velocidad es 1 pixel/fotograma, en cada
+     fotograma la posición será 1 pixel más.  */
+  positionX += speedX;
+}
+    \end{minted}
+
+  \item Dirección del movimiento
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+int positionX = 0;
+int positionY = 0;
+int speedX = 1;
+int speedY = 1;
+
+void draw() {
+  // Velocidad en el eje X
+  positionX += speedX;
+  // Velocidad en el eje Y
+  positionY += speedY;
+}
+    \end{minted}
+
+\newpage
+  \item Movimiento con precisión
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+float positionX = 0.0;
+float positionY = 0.0;
+float speedX = 0.5;
+float speedY = 0.2;
+
+void draw() {
+  // Velocidad en el eje X (0.5 pixeles/fotograma)
+  positionX += speedX;
+  // Velocidad en el eje Y (0.2 pixeles/fotograma)
+  positionY += speedY;
+}
+    \end{minted}
+
+  \item Interpolación del movimiento
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Coordenada X inicial
+int startX = 0;
+// Coordenada X final
+int stopX = 200;
+
+// Coordenada X actual
+float currentX = startX;
+
+// Incremento por cada fotograma
+float step = 0.005;
+// Porcentage de la animación total (de 0.0 a 1.0)
+float percentage = 0.0;
+
+void setup() {
+  size(500, 500);
+  smooth();
+}
+
+void draw() {
+  background(0);
+
+  if (percentage < 1.0) {
+    x = startX + ((stopX-startX) * percentage);
+    y = startY + ((stopY-startX) * percentage);
+    percentage += step;
+  }
+
+  ellipse(currentX, 200, 20, 20);
+}
+    \end{minted}
+
+\newpage
+  \item Ciclos y rebotes en el movimiento
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+float x = 0;
+float speed = 0.5;
+/* Si bounce es false, el círculo comenzará otra vez desde
+   la izquierda */
+boolean bounce = true;
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  background(0);
+  x += speed;
+
+  // Cuando la posición "x" sea mayor que el ancho
+  // recomenzar con x = 0
+  if (x > width) {
+    if (bounce) {
+      // Rebote...
+      speed = -speed;
+    } else {
+      // ...o recomenzar desde la izquierda
+      x = 0;
+    }
+  }
+
+  ellipse(x, 100, 40, 40);
+}
+    \end{minted}
+
+  \item Temporizadores
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+int timer = 2000;
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  // Calcular tiempo actual (desde comienzo de programa)
+  int currentTime = millis();
+
+  background(0);
+
+  /* Si el tiempo actual es mayor que el temporizador,
+     realizar la acción deseada */
+  if (currentTime > timer) {
+    ellipse(x, 60, 90, 90);
+  }
+}
+    \end{minted}
+
+      
+      
+\end{enumerate}
+
+
+\section{Elementos de código que emplearemos}
+\begin{enumerate}
+  \item Ver y definir el rendimiento/velocidad de renderizado
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+void setup() {
+  // Definir la velocidad deseada a 30 fotogr./seg.
+  frameRate(30);
+}
+
+void draw() {
+  // Mostrar la velocidad real
+  println(frameRate);
+}
+    \end{minted}
+\end{enumerate}
+
+\end{document}
