@@ -1,0 +1,134 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- XI -\linebreak Funciones}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Función básica
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Definición de la función "drawRandomCircle"
+void drawRandomCircle() {
+  ellipse(random(width), random(height), 50, 50);
+}
+
+void setup() {
+  size(500,500);
+}
+
+// Mostrar cuatro círculos en posiciones aleatorias
+void draw() {
+  frameRate(1);
+  background(255);
+  drawRandomCircle();
+  drawRandomCircle();
+  drawRandomCircle();
+  drawRandomCircle();
+}
+    \end{minted}
+
+\newpage
+  \item Función con parámetros
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Definición de la función "drawRandomCircle"
+void drawMegaRobot(int x, int y) {
+  ellipse(x, y+100, 150, 150);
+  ellipse(x, y, 50, 50);
+  ellipse(x-10, y, 10, 10);
+  ellipse(x+10, y, 10, 10);
+  rect(x-40, y+60, 80, 10);
+  rect(x-40, y+80, 80, 10);
+  rect(x-40, y+100, 80, 10);
+}
+
+void setup() {
+  size(800, 800);
+}
+
+// Mostrar cuatro círculos en posiciones aleatorias
+void draw() {
+  frameRate(1);
+  background(255);
+  drawMegaRobot(100, 100);
+  drawMegaRobot(400, 100);
+  drawMegaRobot(700, 100);
+
+  drawMegaRobot(300, 300);
+  drawMegaRobot(500, 300);
+
+  drawMegaRobot(100, 500);
+  drawMegaRobot(400, 500);
+  drawMegaRobot(700, 500);
+}
+    \end{minted}
+
+  \item Función que devuelve un valor
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+int square(int x) {
+  int result = x * x;
+  return result;
+}
+
+println("El cuadrado de 3 es : " + square(3));
+    \end{minted}
+      
+\end{enumerate}
+
+\end{document}
