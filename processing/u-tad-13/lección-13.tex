@@ -1,0 +1,231 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- XIII -\linebreak Arrays}
+\author{U-tad\\ Diseño Visual de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Tutoriales online relacionados}
+\begin{enumerate}
+  \item \href{http://processing.org/learning/2darray/}{Arrays bidimensionales} 
+\end{enumerate}
+
+
+\section{Conceptos que emplearemos}
+\begin{enumerate}
+  \item Programar con múltiples variables
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+float rect1x = 0;
+float rect2x = 10;
+float rect3x = 45;
+float rect4x = -18;
+float rect5x = 30;
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  background(255);
+  // Dibujar y modificar cada rectángulo por su lado
+  rect(rect1x, 160, 20, 20);
+  rect(rect2x, 220, 20, 20);
+  rect(rect3x, 260, 20, 20);
+  rect(rect4x, 300, 20, 20);
+  rect(rect5x, 340, 20, 20);
+  rect1x += 0.5;
+  rect2x += 0.5;
+  rect3x += 0.5;
+  rect4x += 0.5;
+  rect5x += 0.5;
+}
+    \end{minted}
+
+\newpage
+
+  \item Programar con arrays
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Declarar y definir los arrays
+float[] rectXs = {0, 10, 45, -18, 30};
+float[] rectYs = {160, 220, 260, 300, 340};
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  background(255);
+  // Dibujar y modificar cada rectángulo
+  for (int i = 0; i < rectXs.length; i++) {
+    rect(rectXs[i], rectYs[i], 20, 20);
+    rectXs[i] += 0.5;
+  }
+}
+    \end{minted}
+
+\newpage
+
+  \item Programar con arrays de objetos
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+class Alien {
+  // Atributos del alien
+  float x, y;
+  
+  // Constructor del alien
+  Alien(float startX, float startY) {
+    x = startX;
+    y = startY;
+  }
+  
+  // Dibujar el alien (¡ahora sólo es un rect!)
+  void display(float sizeX, float sizeY) {
+    rect(x, y, sizeX, sizeY);
+  }
+  
+  // Mover el alien
+  void move(float deltaX, float deltaY) {
+    x += deltaX;
+    y += deltaY;
+  }
+}
+
+// Declarar el array de aliens sin inicializar
+Alien[] aliens;
+
+void setup() {
+  size(500, 500);
+  // Inicializar el array de aliens
+  aliens = new Alien[5];
+  // Inicializar cada alien
+  aliens[0] = new Alien(0, 160);
+  aliens[1] = new Alien(10, 220);
+  aliens[2] = new Alien(45, 260);
+  aliens[3] = new Alien(-18, 300);
+  aliens[4] = new Alien(30, 340);
+}
+
+void draw() {
+  background(255);
+  // Dibujar y modificar cada rectángulo
+  for (int i = 0; i < aliens.length; i++) {
+    aliens[i].display(20, 20);
+    aliens[i].move(0.5, 0.0);
+  }
+}
+    \end{minted}
+
+\end{enumerate}
+
+
+\section{Elementos de código que emplearemos}
+\begin{enumerate}
+
+  \item Declarar un array
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Declarar un array de floats
+float[] myFloats;
+
+// Declarar un array de Strings
+String[] myStrings;
+
+// Declarar un array de Aliens
+Alien[] myAliens;
+    \end{minted}
+
+  \item Definir un array de tipos simples
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Sin inicializar los valores del array
+myFloats = new float[3];
+// Inicializando los valores del array
+myFloats = {1,2,3};
+myFloats = new float[]{1,2,3};
+    \end{minted}
+
+  \item Definir un array de objetos (1)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Sin inicializar los objetos del array
+myStrings = new String[3];
+// Inicializando los objetos del array
+myStrings = {"a","b","c"};
+myStrings = new String[]{"a","b","c"};
+    \end{minted}
+
+  \item Definir un array de objetos (2)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{java}
+// Sin inicializar los objetos del array
+myAliens = new Alien[3];
+// Inicializando los objetos del array
+aliens = new Alien[]{
+  new Alien(0, 160),
+  new Alien(10, 220),
+  new Alien(45, 260)
+};
+// Inicializando los objetos uno a uno
+myAliens = new Alien[3];
+myAliens[0] = new Alien(0,160);
+myAliens[1] = new Alien(10,220);
+myAliens[2] = new Alien(45,260);
+    \end{minted}
+
+\end{enumerate}
+
+\end{document}
