@@ -33,6 +33,9 @@ Para desarrollar en Android...
 
 Scheme
 ------
+
+!
+
 * Desarrollado __con fines educativos__ en el MIT.
 * En lugar de centrarse en la sintaxis, tenía como objetivo estudiar directamente __ideas fundamentales__ de la programación.
 * Pedagógicamente, el lenguaje permite enseñar programación en términos de __lenguajes especializados__ (lenguajes para calcular, lenguajes para dibujar, lenguajes para razonar...).
@@ -48,6 +51,9 @@ Para desarrollar en Android...
 
 Java
 ----
+
+!
+
 * Buena base para muchos otros lenguajes orientados a objetos (C++, Ruby, Python...).
 * Buena aproximación al paradigma de __orientación a objetos__.
 * Muy popular en entornos profesionales, es el lenguaje elegido para el __API de Android__.
