@@ -1,0 +1,150 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{Referencia de uso de Git}
+\author{U-tad\\ Ingeniería en Desarrollo de Contenidos Digitales\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+
+\section{Configuración inicial}
+\begin{enumerate}
+  \item Nombre y dirección de correo (sólo necesario al instalar Git por primera vez)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git config --global user.name "tu nombre"
+$ git config --global user.email "tu email"
+    \end{minted}
+
+  \item Inicialización de un repositorio
+
+Dentro de la carpeta que hemos creado para nuestro proyecto, ejecutar:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git init
+    \end{minted}
+\end{enumerate}
+
+
+\section{Uso básico de un repositorio Git}
+\begin{enumerate}
+
+  \item Marcar archivos para que Git registre sus cambios:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git add <mi-archivo>
+    \end{minted}
+
+Marcar todos los archivos de la carpeta
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git add .
+    \end{minted}
+
+Para registrar todos los cambios, incluyendo las eliminaciones de archivos, se recomiendo usar siempre el \textbf{flag -A}:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git add -A <mi-archivo>
+    \end{minted}
+
+  \item Archivo \textbf{.gitignore} para que Git no pueda marcar algunos archivos
+
+El archivo .gitignore contendrá un listado de archivos que no queremos que sean registrados por Git. Por ejemplo:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ cat .gitignore
+
+.DS_Store
+*.db
+node_modules/
+    \end{minted}
+
+  \item Comprobar el estado del repositorio (y ver si tenemos algo pendiente de marcar o actualizar en Git)
+
+Este comando nos informará si tenemos algún archivo por actulizar, o pendiente de ingresar en el repositorio:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git status
+    \end{minted}
+
+El resultado mostrará listas de archivos con la siguiente información:
+    \begin{enumerate}
+      \item \# Untracked files:
+
+        Estos archivos no han sido marcados por Git todavía para poder seguir sus cambios. Usar \textbf{git add}
+      \item \# Changes to be committed:
+
+        Estos archivos han sido resgistrados para introducir en la base de datos de cambios de Git, pero están a la espera de realizarlo. Usar para ello \textbf{git commit -m <descripción de commit>}
+      \item \# Changes not staged for commit:
+
+        Estos archivos ya han sido registrados en Git anteriormente, pero han sufrido cambios desde la última actualización en la base de datos de cambios de Git. Usar \textbf{git add <archivo o .>} para registrar el archivo.
+    \end{enumerate}
+
+  \item Ingresar los cambios en la base de datos
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git commit -m <mensaje descriptivo del cambio>
+    \end{minted}
+
+  \item Visualizar los cambios registrados en Git
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git log
+$ git log --pretty=oneline
+    \end{minted}
+
+
+
+\end{enumerate}
+
+\end{document}
