@@ -141,8 +141,150 @@ $ git commit -m <mensaje descriptivo del cambio>
     \begin{minted}[linenos=true,bgcolor=bg]{bash}
 $ git log
 $ git log --pretty=oneline
+$ git log --graph --pretty=oneline
     \end{minted}
 
+  \item Volver a versiones anteriores
+
+    Forma genérica. Substituir \textbf{<hash>} por el identificador único del commit, que aparece en \textbf{git log}.
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout <hash>
+    \end{minted}
+
+    Volver a dos versiones antes de la última registrada (el \textasciicircum{} define el padre, \textasciicircum{}\textasciicircum{} será dos versiones anteriores)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout HEAD^^
+    \end{minted}
+
+Recuperar la última versión de un archivo, descartando los cambios realizados sobre él:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout <nombre-archivo>
+    \end{minted}
+
+Una vez realizado el registro de cambios con \textbf{git add <archivo>}, cancelar esos cambios:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git reset HEAD <nombre-archivo>
+$ git checkout <nombre-archivo>
+    \end{minted}
+
+Una vez realizado el commit de forma definitiva, se puede deshacer un nuevo commit especial:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git revert HEAD
+    \end{minted}
+
+También podemos modificar el último commit de forma directa. Una vez hayamos hecho los cambios hacemos:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git add <archivos-modificados>
+$ git commit --amend
+    \end{minted}
+
+Para deshacer una serie de commits se puede usar el siguiente comando. Sin embargo, no es muy recomendable, ya que perderemos la historia, y si colaboramos con otros desarrolladores, causará problemas.
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git reset --hard <commit>
+    \end{minted}
+
+
+  \item Uso básico de \textbf{branches} (ramas)
+
+Crear un branch y cambiar a él:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout -b <nombre-branch-sin-espacios>
+    \end{minted}
+
+Ver listado de branches:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git branch
+    \end{minted}
+
+Ir a otro branch:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout <nombre-branch>
+    \end{minted}
+
+Merging (fusión) de branches:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git checkout master
+$ git merge <nombre-de-branch-a-fundir-con-master>
+    \end{minted}
+
+\end{enumerate}
+
+\section{Uso colaborativo de Git}
+
+\begin{enumerate}
+  \item Repositorios remotos: uso básico de git colaborativamente
+
+En primer lugar, un miembro del equipo creará el repositorio en local, y lo subirá a un servidor Git donde se alojará el código que va a trabajarse de manera colaborativa. Distintos servicios como Github nos facilitarán la tarea, y nos darán instrucciones específicas para hacer esto.
+
+Una vez tengamos un repositorio remoto (que podría ser uno preexistente también). Clonaremos el repositorio:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git clone <repositorio-git-remoto> <opcional:nombre-de-carpeta>
+    \end{minted}
+
+Cuando todos los desarrolladores que van a colaborar dispongan de este repositorio, podremos desarrollar de forma simultánea e independiente, y procederemos a compartir las modificaciones de cada uno de los miembros del equipo.
+
+En primer lugar, actualizaremos nuestro repositorio con los cambios realizados por otro usuario, y ya subidos al repositorio central remoto. Primero nos descargaremos los cambios (fetch) y luego los fusionaremos (merge) en el branch actual:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git fetch
+$ git merge origin/master
+    \end{minted}
+
+O, en una sola línea equivalente:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git pull
+    \end{minted}
+
+Esto sentará la base para poder subir nuestros cambios de forma correcta, ya que habremos respetado los cambios de los otros usuarios y no estropearemos su historia (aunque eso implique cambiar alguna de las líneas que ellos hayan introducido). Para subir nuestros cambios, haremos un push:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git push <remoto> <branch>
+    \end{minted}
+
+Si tenemos el repositorio remoto de Git adecuadamente configurado (como ocurrirá si hemos seguido las instrucciones con Github), simplemente con el siguiente comando bastará:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git push
+    \end{minted}
+
+Como alternativa para trabajar colaborativamente, podemos emplear el método Github de Forks / Pull Requests. Para ello, haremos un fork de un proyecto con Github iniciado por uno de los miembros del equipo (la interfaz cambia constantemente, así que lo mejor es buscar en Github cómo hacerlo). A continuación, realizaremos los cambios en nuestro repositorio independiente y haremos pulls de igual manera. Sin embargo, para enviar modificaciones, realizaremos lo que se denomina un \textbf{pull request} a través de Github (hay herramientas para poder hacerlo por línea de comandos también). Este pull request lo recibirá el usuario que creó el repositorio original, que se encargará de hacer el pull en respuesta, y mantendrá actualizado el código.
+
+  \item Resolución de conflictos
+
+Al realizar un merge que cause conflictos, los archivos afectados tendrán la siguiente estructura, en cada uno de los puntos conflictivos:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{javascript}
+<<<<<<< HEAD
+console.log("Versión HEAD");
+=======
+console.log("Versión en el branch test-branch");
+>>>>>>> test-branch
+    \end{minted}
+
+Tenemos dos opciones:
+    \begin{enumerate}
+      \item Editar manualmente
+      \item Usar \textbf{git mergetool} para invocar un programa de edición de conflictos
+    \end{enumerate}
+
+Una vez realizadas las modificaciones, haremos un commit, dejando claro en un mensaje que hemos arreglado los conflictos:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{bash}
+$ git commit -m 'Fixed conflict'
+    \end{minted}
 
 
 \end{enumerate}
