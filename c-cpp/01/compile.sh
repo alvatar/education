@@ -1,6 +1,6 @@
 #!/bin/sh
-pdflatex -shell-escape *.tex
+pdflatex -shell-escape 01.tex
 rm *aux
 rm *log
 rm *out
-open -a Preview *.pdf
+open -a Preview 01.pdf

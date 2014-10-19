@@ -66,7 +66,7 @@
   \item Compilación
 
     \begin{minted}[linenos=true,bgcolor=bg]{bash}
-cc programa.c
+gcc programa.c
     \end{minted}
   \item Ejecución
 
@@ -159,6 +159,7 @@ main ()
     \item variables (caracteres y números enteros)
     \item cadenas de formato (para printf y scanf)
     \end{enumerate}
+  \item{scanf("\%10[0-9a-zA-Z ]s", str);}
 
   \item Ejercicios
     \begin{enumerate}
@@ -170,8 +171,450 @@ main ()
     \end{enumerate}
   \end{enumerate}
 
-\section{Variables y expresiones aritméticas}
-[continuará...]
 
+\section{Variables y expresiones aritméticas}
+  \begin{enumerate}
+  \item Muchas ideas nuevas...
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main ()
+{
+  /* Declaración de variables */
+  int fahr, celsius;
+  /* Inicialización */
+  int lower = 0, upper = 300, step = 20;
+
+  fahr = lower;
+  while( fahr <= upper )
+  {
+    celsius = 5 * (fahr - 32) / 9;
+    printf( "%d\t%d\n", fahr, celsius );
+    fahr = fahr + step;
+  }
+}
+    \end{minted}
+  \item Partes
+    \begin{enumerate}
+      \item Comentarios
+      \item Declaración de variables
+      \item Inicialización de variables (variaciones)
+      \item Asignación
+      \item Expresiones matemáticas
+      \item Bucle \textbf{while}
+    \end{enumerate}
+  \item Más precisión en los cálculos
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main ()
+{
+  float fahr, celsius; // <--
+  int lower = 0, upper = 300, step = 20;
+
+  fahr = lower;
+  while( fahr <= upper )
+  {
+    celsius = 5 * (fahr - 32) / 9;
+    printf( "%d\t%d\n", fahr, celsius );
+    fahr = fahr + step;
+  }
+}
+    \end{minted}
+  \item Tipos de variables
+    \begin{enumerate}
+      \item int (short, long)
+      \item float (double)
+      \item char
+    \end{enumerate}
+  \item Ejercicios
+    \begin{enumerate}
+    \item Un programa que solicite la entrada de valor en grados Celsius y lo devuelva en Fahrenheit.
+    \item Un conversor de millas a kilómetros.
+    \item Un programa que muestre la tabla de los cuadrados de los números enteros desde el 0 hasta el 100.
+    \item Mostrar una tabla con cada uno de los caracteres del alfabeto que están registrados en la tabla ASCII y su correspondiente codificación decimal y hexadecimal.
+    \item Calcular la media de 10 números que introduzcas manualmente al programa (mediante scanf).
+    \item Ídem, pero que el programa muestre la media de los números que has introducido hasta el momento, cada vez que introduzcas uno nuevo (hasta los 10, como en el ejercicio anterior).
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Más sobre bucles: la proposición \textit{for}}
+  \begin{enumerate}
+  \item Otra forma de expresar el bucle
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main ()
+{
+  int fahr;
+  for( int i = 0; fahr <= 300; fahr = fahr + 20 )
+  {
+    printf( "%3d%6.1f\n", fahr, (5.0/9.0)*(fahr-32) );
+  }
+}
+    \end{minted}
+  \item \textbf{for} vs. \textbf{while}
+  \item Expresiones en el lugar de variables
+  \item ¡Cuidado con los bloques de una línea sin llaves explícitas!
+  \item Ejercicios
+    \begin{enumerate}
+    \item Escribir la tabla del ejemplo en orden inverso (de 300 hasta 0), en pasos de 10 en 10.
+    \item Escribir 100 veces la frase "Un bucle for consta de cuatro partes: inicialización, test, paso y cuerpo".
+    \item Escribir todos los números desde el 0 hasta el 100, contando en pasos de 0.5.
+    \item Mostrar una matriz bidimensional que represente todos los productos de los números del 1 al 10.
+    \item Un programa que muestre un símbolo "\%", luego dos, luego tres, etc... hasta 80. Al finalizar, hace lo mismo al revés.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Constantes simbólicas: Avoid Magic Numbers}
+  \begin{enumerate}
+  \item{Eliminando los números \textit{mágicos}: añadiendo significado}
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+/* Constantes definidas con una directiva #define */
+#define LOWER  0
+#define UPPER  300
+#define STEP   20
+
+main()
+{
+  int fahr;
+  for (fahr = LOWER; fahr <= UPPER; fahr = fahr + STEP) {
+    printf("%3d %6.1f\n", fahr, (5.0/9.0)*(fahr-32));
+  }
+}
+    \end{minted}
+  \item{Son constantes definidas con una directiva \textbf{\#define}, es decir, que el procesador se encarga de realizar una substituación \textit{sobre el código}}
+  \item{gcc -E mi\_programa.c}
+  \item{Ejercicios}
+    \begin{enumerate}
+    \item Representa la tabla periódica de los elementos, identificando cada número atómico como una definición de preprocesador que la asocie con un nombre en mayúsculas que aclare el significado.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Entrada/Salida de caracteres}
+  \begin{enumerate}
+  \item ./programa < archivo
+  \item Echo
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main()
+{
+  int c; // Variable que puede almacenar char y EOF
+  while ((c = getchar()) != EOF)
+  {
+    putchar(c);
+  }
+}
+    \end{minted}
+  \item Contar caracteres
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main()
+{
+  long number_characters = 0;
+  while (getchar() != EOF)
+  {
+    ++number_characters;
+  }
+  printf("%ld\n", number_characters);
+}
+    \end{minted}
+  \item Contar caracteres, v2
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main()
+{
+  long nc = 0;
+  for (nc = 0; getchar() != EOF; nc++)
+  ; // Todo lo necesario lo hemos hecho en el for
+  printf("%ld\n", number_characters);
+}
+    \end{minted}
+  \item Contar líneas
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main()
+{
+  int c, nl;
+  nl = 0;
+  while ((c = getchar()) != EOF)
+    if (c == '\n')
+      ++nl;
+  printf("%d\n", nl);
+}
+    \end{minted}
+  \item Contar palabras, líneas y número de caracteres
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+#define IN   1  /* estado: dentro de una palabra */
+#define OUT  0  /* estado: fuera de una palabra */
+
+main()
+{
+  int c, nl, nw, nc, state;
+  state = OUT;
+  nl = nw = nc = 0;
+  while ((c = getchar()) != EOF)
+  {
+    ++nc;
+    if (c == '\n')
+      ++nl;
+    if (c == ' ' || c == '\n' || c = '\t')
+      state = OUT;
+    else if (state == OUT)
+    {
+      state = IN;
+      ++nw;
+    }
+  }
+  printf("%d %d %d\n", nl, nw, nc);
+}
+    \end{minted}
+  \item{Ejercicios}
+    \begin{enumerate}
+    \item Comprueba el valor de EOF como número entero usando la salida de printf.
+    \item Escribe un programa que cuente el número de espacios, tabuladores y saltos de línea y presente el resultado en forma de tabla.
+    \item Escribe un programa para codificar un archivo con el cifrado \textit{rot13}.
+    \item Escribe un programa que sustituya los caracteres por sus codificaciones ASCII.
+    \item Escribe un programa que replique las palabras de entrada cada una en una línea.
+    \item Escribe un programa que comprima las secuencias de caracteres iguales mediante un algoritmo \textbf{RLE} (Run-length encoding):
+      \begin{enumerate}
+      \item 1. Si un caracter aparece repetido, ejecutaremos (2), si no, continuaremos con el siguiente caracter.
+      \item 2. En caso de encontrar un caracter repetido, suplantaremos la secuencia por el número de veces que se repite seguido del caracter repetido.
+      \item 3. Cuando el caracter se deje de repetir, continuaremos en (1).
+      \newline
+      Ejemplo: RRRRRRRRRRRRGGGGG --> 12R5G
+      En Blackboard podrás encontrar un programa que te generará un input aleatorio para este ejercicio.
+      \end{enumerate}
+    \item Provee el anterior ejercicio con una serie de archivos de test que demuestren su funcionamiento.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Arrays}
+  \begin{enumerate}
+  \item Contar dígitos, espacios en blanco y el resto de caracteres
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+main()
+{
+  int c, i, nwhite, nother;
+  int ndigit[10];
+  // Inicialización de variables simples
+  nwhite = nother = 0;
+  // Inicialización del array
+  for (i = 0; i < 10; ++i)
+    ndigit[i] = 0;
+  while ((c = getchar()) != EOF)
+    if (c >= '0' && c <= '9')
+      ++ndigit[c-'0'];
+    else if (c == ' ' || c == '\n' || c == '\t')
+      ++nwhite;
+    else
+    ++nother;
+  printf("digits =");
+  for (i = 0; i < 10; ++i)
+    printf(" %d", ndigit[i]);
+  printf(", white space = %d, other = %d\n", nwhite, nother);
+}
+    \end{minted}
+  \item{Ejercicios}
+    \begin{enumerate}
+    \item Un programa que muestre las estadísticas básicas de un texto: número de palabras, número de caracteres, número de líneas.
+    \item Un programa que muestre un histograma de las longitudes de las palabras de un texto de entrada (usando la entrada estándar). La orientación más sencilla del histograma es la horizontal: cada longitud en una línea y el número de ocurrencias de la misma como longitud horizontal. Para ello usaremos un caracter (por ej. =) y limitaremos el ancho del histograma a 80 caracteres.
+    \item Un programa que identifique y muestre el número de veces que se ha empleado un bucle, dado el código en C. Nota: se asume que el código contiene las macros expandidas, con lo que no habría alteraciones del código por parte del preprocesador.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Creando nuestras propias funciones}
+  \begin{enumerate}
+  \item Declaración y definición de una función
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+/* declaración de la función (prototipo) */
+int power(int m, int n);
+
+main()
+{
+  int i;
+  for (i = 0; i < 10; ++i)
+    printf("%d %d %d\n", i, power(2,i), power(-3,i));
+  return 0;
+}
+
+/* definición de la función */
+int power(int base, int n)
+{
+  int i, p;
+  p = 1;
+  for (i = 1; i <= n; ++i)
+    p = p * base;
+  return p;
+}
+    \end{minted}
+  \item Declaración, definición y orden de aparición.
+  \item Declaración implícita
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+/* declaración implícita (sin prototipo) */
+int power(int base, int n)
+{
+  int i, p;
+  p = 1;
+  for (i = 1; i <= n; ++i)
+    p = p * base;
+  return p;
+}
+
+main()
+{
+  int i;
+  for (i = 0; i < 10; ++i)
+    printf("%d %d %d\n", i, power(2,i), power(-3,i));
+  return 0;
+}
+    \end{minted}
+  \item Localidad de las variables: parámetros y variables locales
+  \item Tipos de devolución
+  \item Instrucción \textbf{return}
+  \item Por defecto: llamadas por valor (excepto arrays)
+  \item{Ejercicios}
+    \begin{enumerate}
+    \item Reescribe el programa de conversión Fahrenheit - Celsius usando una función específica para la conversión.
+    \item Escribe una pequeña librería-demostración de cálculos geométricos sencillos. Todas las funciones y su uso serán realizadas en el mismo archivo \textbf{.c}.
+      \begin{enumerate}
+      \item Área de: cuadrado, rectángulo, triángulo, círculo.
+      \item Perímetro de: cuadrado, rectángulo, triángulo, círculo, polígono.
+      \end{enumerate}
+    \end{enumerate}
+  \end{enumerate}
+
+\newpage
+\section{Arrays y funciones}
+  \begin{enumerate}
+  \item Mostrar por pantalla la línea más larga, dada una entrada estándar
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+#define MAXLINE 1000
+
+int getline(char line[], int maxline);
+void copy(char to[], char from[]);
+
+main()
+{
+  int len;
+  int max;
+  char line[MAXLINE];
+  char longest[MAXLINE];
+  max = 0;
+  while ((len = getline(line, MAXLINE)) > 0)
+    if (len > max)
+    {
+      max = len;
+      copy(longest, line);
+    }
+  if(max>0)
+    printf("%s", longest);
+  return 0;
+}
+
+int getline(char s[], int lim)
+{
+  int c, i;
+  for (i=0; i < lim-1 && (c=getchar())!=EOF && c!='\n'; ++i)
+    s[i] = c;
+  if (c == '\n')
+  {
+    s[i] = c;
+    ++i;
+  }
+  s[i] = '\0';
+  return i;
+}
+
+void copy(char to[], char from[])
+{
+  int i;
+  i = 0;
+  while ((to[i] = from[i]) != '\0')
+    ++i;
+}
+    \end{minted}
+  \item Devolución de valores vs. efectos secundarios.
+  \item Problemas con esta implementación.
+  \item{Ejercicios}
+    \begin{enumerate}
+    \item Escribe un programa que divida las líneas mayores de 80 caracteres.
+    \item Escribe un programa que genere de forma automática una plantilla de programa C, con tu firma personalizada. Debes poder introducir el nombre del programa y el autor, y que se genere la plantilla de forma acorde.
+    \item Una función \textit{reverse} que invierta el orden de las letras en una palabra. Emplea la función en un programa que invierta todas las palabras de un texto.
+    \item Escribe un programa que muestre el número de veces que aparece cada caracter ASCII en un texto.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Ámbito de las variables}
+  \begin{enumerate}
+  \item Variables automáticas y globales: características
+  \item Ejemplo de referencia (código incompleto)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+#define MAXLINE 1000
+
+main()
+{
+  /* Variable automática */
+  int len;
+  /* Variable global */
+  extern int max;
+  /* "extern" se puede (y se suele) omitir si la
+     varible está definida en el mismo archivo */
+  char longest[];
+  max = 0;
+  /* Tanto getline como copy ahora no necesitarían
+     parámetros */
+  while ((len = getline()) > 0)
+    if (len > max)
+    {
+      max = len;
+      copy();
+    }
+  if(max>0)
+    printf("%s", longest);
+  return 0;
+}
+    \end{minted}
+  \item Los peligros de las variables globales.
+  \newpage
+  \item Ejercicios
+    \begin{enumerate}
+    \item Escribe un programa que sustituya cada tabulador por un número de espacios que será definido por el usuario al ejecutar el programa.
+    \item Escribe un programa que haga lo contrario, cuando encuentre el número de espacios correspondiente al tabulador. El número de espacios será definido por el usuario.
+    \item Escribe un programa que muestre los nombres de variables que sean de tipos básicos (int, long, float, double, char...)
+    \item Un programa que elimine todos los comentarios de un código C.
+    \end{enumerate}
+  \end{enumerate}
 
 \end{document}
