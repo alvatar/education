@@ -1,0 +1,189 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+% Courier
+\usepackage{courier}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- III -\linebreak Estructuras de control de flujo}
+\author{Ingeniería en Desarrollo de Contenidos Digitales\\ \textbf{Introducción a la Programación}\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\includegraphics[scale=0.3,resolution=300]{images/utad.png}
+\end{center}
+
+
+\section{Esquemas básicos de las estructuras de control de flujo}
+  \begin{enumerate}
+  \item if-else
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+if (expression)
+  statement
+else if (expression)
+  statement
+else if (expression)
+  statement
+else if (expression)
+  statement
+else
+  statement
+    \end{minted}
+
+  \item switch
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+switch (expression)
+{
+  case const-expr:
+    statements
+  case const-expr:
+    statements
+  case const-expr:
+    statements
+  case const-expr:
+    statements
+  default:
+    statements
+}
+    \end{minted}
+ 
+\pagebreak
+
+  \item break
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+switch (expression)
+{
+  case const-expr:
+    statements
+    break; // Impide la ejecución de la siguiente línea
+  case const-expr:
+    statements
+  defaut:
+    break; // Por defecto no ejecuta nada
+}
+    \end{minted}
+
+  \item while
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+while (expression)
+  statement
+    \end{minted}
+
+  \item for
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+for (expr1; expr2; expr3)
+  statement
+    \end{minted}
+
+  \item do-while
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+do
+  statement
+while (expression);
+    \end{minted}
+
+\section{continue y goto}
+  \begin{enumerate}
+  \item continue
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+for (i = 0; i < n; i++)
+       if (a[i] < 0) /* saltarse los elementos negativos */
+           continue;
+       ... /* operar con los positivos */
+    \end{minted}
+    
+  \item goto
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+for ( ... )
+  for ( ... ) {
+    ...
+    if (error-condition)
+      goto error;
+} ...
+error:
+  /* código de error */
+    \end{minted}
+
+  \item Ejercicios
+    \begin{enumerate}
+      \item Escribe una función \textit{escape(destination,source)} que copie la cadena de caracteres \textit{source} a la \textit{destination}, modificando los caracteres no visibles por las secuencias de escape correspondientes. Es decir, el salto de línea por los caracteres \textbackslash{}n, el tabulador por \textbackslash{}t, etc. Debes usar un switch para esto.
+      \item Escribe un programa que resuelva el laberinto que diseñaste en el tema 2 (ejercicio 9.1). Si el laberinto no es resoluble, diseña uno que lo sea. La solución deberá presentarse como una secuencia de movimientos (1: izquierda, 2: arriba, 3: derecha, 4: abajo) en forma de cadena de caracteres por la salida estándar (secuencia de números). 
+      \item Escribe un programa que interprete una secuencia-solución de laberintos mostrando la secuencia de movimientos a la que corresponde (arriba, arriba, abajo, derecha...).
+      \item Escribe el mismo programa agrupando los movimientos en la misma dirección (3 arriba, 1 derecha, 5 arriba...).
+      \item \textbf{Tareas Especiales}.
+
+
+        \texttt{Da Dubstep Mission
+\newline
+==================
+\newline
+          Dj Dijkstra está a la última con el Dubstep. Está que lo parte, y saca álbums cada semana. ¿Cómo lo hace? Sencillo: tiene un generador de dubstep de 400 GdB que consume más que un Hummer a gasolina. Tu misión es replicarlo para destrozale el negocio con versiones de Melendi. El truco de Dj Dijkstra es el siguiente:\newline
+        \begin{enumerate}
+        \item Lee una lírica del reputado compositor en la entrada estándar. Seguro que Google te puede ayudar con esto.
+        \item Introduce una secuencia WUB, YUUUP o ZZZB (un número arbitrario de veces) entre cada sílaba, sacando la misma por salida estándar. Tendrás que averiguar como generar números aleatorios. Google al rescate, una vez más.
+        \item El detector de sílabas funciona agrupando una vocal con una o más consonantes. Esto es lo más complicado. Encuentra tu propia solución para darle el toque especial a tu remezclador automático.
+    \end{enumerate}}
+    \end{enumerate}
+  \end{enumerate}
+
+
+  \end{enumerate}
+
+\end{document}

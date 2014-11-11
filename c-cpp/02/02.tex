@@ -1,0 +1,268 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- II -\linebreak Tipos, Operadores y Expresiones}
+\author{Ingeniería en Desarrollo de Contenidos Digitales\\ \textbf{Introducción a la Programación}\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\includegraphics[scale=0.3,resolution=300]{images/utad.png}
+\end{center}
+
+
+\section{Tipos de datos}
+  \begin{enumerate}
+  \item Tipos básicos
+    \begin{enumerate}
+    \item char
+    \item int
+    \item float
+    \item double
+    \item char
+    \end{enumerate}
+
+  \item Modificadores de tamaño
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+short int my_short_int;
+short my_second_short_int; /* sintaxis simplificada */
+long int my_long_int;
+long my_second_long_int; /* sintaxis simplificada */
+
+long double my_long_double;
+    \end{minted}
+
+  \item Modificadores de signo
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+signed int a; /* número entero, con signo */
+unsigned int b; /* número entero, sin signo */
+unsigned char c; /* character (byte), sin signo */
+    \end{minted}
+
+  \item Printf y los tipos con modificador
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+printf("%l, %ul\n", 12l, 34ul);
+    \end{minted}
+
+  \item Ejercicios
+    \begin{enumerate}
+    \item Muestra por pantalla los valores mínimos y máximos de cada uno de los tipos y sus combinaciones de modificadores.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Constantes}
+  \begin{enumerate}
+  \item Valores constantes
+  \item Expresiones constantes
+  \item Constantes enumeradas
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+enum boolean { NO, YES };
+
+enum escapes {
+  BELL = '\a',
+  BACKSPACE = '\b',
+  TAB = '\t',
+  NEWLINE = '\n',
+  VTAB = '\v',
+  RETURN = '\r'
+};
+    \end{minted}
+  \item Variables constantes
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+const double pi = 3.141592653589;
+const char error_msg[] = "Error: ";
+
+int strlen(const char[]);
+    \end{minted}
+  \end{enumerate}
+
+\section{Operadores aritméticos}
+  \begin{enumerate}
+  \item +
+  \item -
+  \item *
+  \item /
+  \item \%
+  \item Operador y asignación: op= (+=, -=, *=, /=, \%=)
+  \end{enumerate}
+
+\section{Operadores lógicos y relacionales}
+  \begin{enumerate}
+  \item >
+  \item >=
+  \item <
+  \item <=
+  \item ==
+  \item !=
+  \item ||
+  \item \&\&
+  \item Precedencia de los operadores (buscar table de precedencias de operadores en C)
+  \item Valor numérico de una expresión booleana.
+  \item Valores numéricos como expresión booleana.
+  \end{enumerate}
+
+\section{Conversiones entre tipos}
+  \begin{enumerate}
+  \item Conversión automática: de datos de un tamaño menor a otro mayor (no se produce pérdida de información).
+  \item Conversión que perderán datos. El compilador normalmente mostrará un \textit{warning}.
+  \item char a int, cuidado con los signos.
+  \item Reglas de conversión automática
+    \begin{enumerate}
+    \item Si un operando es \textbf{long double}, convertir el otro a \textbf{long double}
+    \item en caso contrario, si un operando es \textbf{double}, convertir el otro a \textbf{double}
+    \item en caso contrario, si un operando es \textbf{float}, convertir el otro a \textbf{float}
+    \item en caso contrario, convertir \textbf{char} y \textbf{short} a \textbf{int}
+    \item por último, si un operando es \textbf{long}, convertir el otro a \textbf{long}
+    \item Nota: los \textbf{floats} no se convierten automáticamente a \textbf{double}
+    \end{enumerate}
+  \item Conversiones y comparaciones entre \textbf{unsigned} y \textbf{signed}: dependen del procesador.
+  \item Conversiones forzadas: \textit{cast}.
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+sqrt((double) n)
+    \end{minted}
+  \item Comprobar todo con los \textit{warnings} del compilador.
+  \item La mejor regla: hacer sólo lo que tenga sentido.
+  \item Extra: funciones en <ctype.h>
+  \item Ejercicios
+    \begin{enumerate}
+    \item Escribe un programa que lea de la entrada estándar y convierta a decimal todos los números que encuentra, extrayéndolos en la salida estándar. Si encuentra un número en octal o en hexadecimal, debe ser convertido. Del mismo modo, detectará que los números contienen decimales y los mostrará de forma correcta.
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Operadores incremento y decremento}
+  \begin{enumerate}
+  \item Preincremento: ++n
+  \item Postincremento: n++
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int n = 0, a;
+a = n++; // a = 0
+n = 0;
+a = ++n; // a = 1
+    \end{minted}
+  \end{enumerate}
+
+\section{Operadores sobre bits}
+  \begin{enumerate}
+  \item \&
+  \item |
+  \item \^{}
+  \item <<
+  \item >>
+  \item \~{}
+  \item Ejercicios
+    \begin{enumerate}
+      \item Escribe un programa que muestre un número entero de 4 bits como patrón de 0s y 1s. Muestra los 0s y 1s agrupados en bytes. El número se introducirá con \textit{scanf}. Se mostrará la codificación del número en un entero con signo y sin signo, mostrando ambas codificaciones del número.
+    \item Usa este programa para comprobar el efecto de cada uno de los operadores sobre bits, mostrando el número original y el resultado, con su patrón de 0s y 1s.
+    \item Escribe una función \textit{set\_bit(int x, int\_bit, int value);} que modifique el valor del bit posicionado en \textit{n\_bit} al valor \textit{value}.
+    \item Escribe una función \textit{invert\_bit(int x, int\_bit);} que invierta el valor del bit posicionado en \textit{bit}.
+    \item Escribe una función que cuente el número de bits 0 en un int.
+    \item Escribe una función que muestre el resultado de la operación \textit{x \&= (x-1)} sobre 10 números (tanto en decimal como en binario). ¿Qué ocurre con todos los números al aplicar esta operación?
+    \end{enumerate}
+  \end{enumerate}
+
+\section{Expresiones condicionales}
+  \begin{enumerate}
+  \item El operador ternario condicional: ?:
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+if (a > b) {
+    result = x;
+} else {
+    result = y;
+}
+
+/* Equivalente a: */
+result = a > b ? x : y;
+    \end{minted}
+  \item Equivale a una expresión, con lo que las reglas de conversión se aplican como bloque.
+  \end{enumerate}
+
+\newpage
+\section{Precedencia de los operadores}
+  \begin{enumerate}
+  \item Tabla ordenada de más precedencia a menos:
+
+  \begin{tabular}{ l r }
+() [] -> . & de izquierda a derecha \\
+! ~ == -- = - *(derreferencia) sizeof & de \textbf{derecha a izquierda} \\
+* / \% & de izquierda a derecha \\
++ - & de izquierda a derecha \\
+<< >> & de izquierda a derecha \\
+< <= > >= & de izquierda a derecha \\
+== != & de izquierda a derecha \\
+\& & de izquierda a derecha \\
+\^{} & de izquierda a derecha \\
+| & de izquierda a derecha \\
+\&\& & de izquierda a derecha \\
+|| & de izquierda a derecha \\
+?: & de \textbf{izquierda a derecha} \\
+= += -= *= /= \%= \&= \^{}= |= <<= >>= & de \textbf{derecha a izquierda} \\
+, & de izquierda a derecha \\
+\end{tabular}
+  \item Ante la ambigüedad, emplear paréntesis.
+  \item Ejercicios
+    \begin{enumerate}
+      \item Diseña manualmente con un editor de texto un laberinto de 32x32 caracteres. Los caracteres solo pueden ser 0 (vacío) y 1 (lleno). Puedes emplear dos caracteres distintos de forma que se vea mejor, pero uno debe significar lleno y otro vacío.
+      \item Escribe un programa que codifique en un número entero cada una de las 32 filas de 0s y 1s, considerando estos como los bits que componen el número.
+      \item Escribe un programa que descodifique los números enteros de 32 bits e imprima por pantalla los 0s y 1s que lo componen, reconstruyendo el laberinto.
+    \end{enumerate}
+  \end{enumerate}
+
+\end{document}
