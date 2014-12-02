@@ -169,7 +169,7 @@ double pop(void)
     \begin{minted}[linenos=true,bgcolor=bg]{c}
 #include <ctype.h>
 
-int getop(void);
+int getch(void);
 void ungetch(int);
 
 int getop(char s[])
@@ -274,6 +274,41 @@ int getop(char []);
 int getch(void);
 void ungetch(int);
     \end{minted}
+  \end{enumerate}
+
+\section{Ejercicios}
+  \begin{enumerate}
+    \item Extiende el programa \textit{calculator.c} con las operaciones \textbf{sin}, \textbf{cos}, \textbf{exp}, \textbf{pow}.
+
+    \item Escribe un intérprete para un lenguaje de pila con la siguientes características:
+
+        \texttt{INSTRUCCIONES Y SINTAXIS
+\newline
+-
+        \begin{enumerate}
+        \item ADD: suma - sintaxis NUM1, NUM2, ADD
+        \item MUL: multiplcación - sintaxis NUM1, NUM2, MUL
+        \item LST: Left Shiftb(<<) - sintaxis: NUM1, NUM2, LST
+        \item RST: Right Shift (>>) - sintaxis: NUM1, NUM2, RST
+        \item OR: OR lógico - sintaxis: NUM1, NUM2, OR (produce un 1 si true, 0 si false)
+        \item AND: AND lógico - sintaxis: NUM1, NUM2, AND (ídem)
+        \item BOR: OR binario (a nivel de bits) - sintaxis: NUM1, NUM2, BOR
+        \item BND: AND binario (a nivel de bits) - sintaxis: NUM1, NUM2, BND
+    \end{enumerate}
+PILA
+\newline
+-
+\newline
+El lenguaje funciona EXACTAMENTE igual que la calculadora que hemos creado en clase. Se basa en una pila en la que se van acumulando los valores y sobre la que se realiza la operación en el orden en el que se encuentran.
+\newline
+\newline
+EJEMPLO DE PROGRAMA
+\newline
+-
+\newline
+10, 30, ADD, 2, LST, 3, 4, ADD, ADD
+\newline
+Producirá el equivalente al siguiente cálculo: (((10 + 30) << 2) + 4) + 3)}
   \end{enumerate}
 
 

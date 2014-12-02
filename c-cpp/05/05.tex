@@ -1,0 +1,375 @@
+\documentclass[a4paper,oneside]{article}
+% Graphics
+\usepackage{graphicx}
+\usepackage{wrapfig}
+% Font selection
+\usepackage[utf8]{inputenc}
+\usepackage{PTSansNarrow} 
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+% Code highlighting
+\usepackage{minted}
+% Links
+\usepackage[hidelinks]{hyperref}
+% Courier
+\usepackage{courier}
+
+% Background color definition
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+% Code line numbers configuration
+\renewcommand{\theFancyVerbLine}{\sffamily
+  \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize
+     \oldstylenums{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\newcommand{\minted@write@detok}[1]{%
+  \immediate\write\FV@OutFile{\detokenize{#1}}}%
+
+\newcommand{\minted@FVB@VerbatimOut}[1]{%
+  \@bsphack
+  \begingroup
+    \FV@UseKeyValues
+    \FV@DefineWhiteSpace
+    \def\FV@Space{\space}%
+    \FV@DefineTabOut
+    %\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+    \let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+    \immediate\openout\FV@OutFile #1\relax
+    \let\FV@FontScanPrep\relax
+%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+    \let\@noligs\relax
+%% DG/SR modification end
+    \FV@Scan}
+    \let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+
+\renewcommand\minted@savecode[1]{
+  \immediate\openout\minted@code\jobname.pyg
+  \immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+  \immediate\closeout\minted@code}
+\makeatother
+
+
+\title{- V -\linebreak Punteros y Arrays}
+\author{Ingeniería en Desarrollo de Contenidos Digitales\\ \textbf{Introducción a la Programación}\\ Prof. Álvaro Castro-Castilla}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\includegraphics[scale=0.3,resolution=300]{images/utad.png}
+\end{center}
+
+
+\section{Punteros: direcciones de memoria}
+  \begin{enumerate}
+  \item ¿En qué consisten los punteros?
+
+  \item Declaración de punteros (y sus tipos)
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+void *vp;
+int *ip;
+    \end{minted}
+
+  \item Operador unario \& \textbf{(referencia: la dirección de...)}
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int *ip;
+int a = 99;
+
+ip = &a;
+    \end{minted}
+
+  \item Operador unario * \textbf{(derreferencia: el valor en...)}
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int *ip;
+int a = 99;
+
+ip = &a;
+int b = *ip;
+*ip = 1234;
+    \end{minted}
+
+  \item Operaciones sobre los valores en una dirección de memoria
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int *ip;
+int a = 0;
+ip = &a;
+
+(*i)++;
+*ip = *ip + 9;
+    \end{minted}
+  \end{enumerate}
+
+\section{Funciones y parámetros por referencia}
+
+  \begin{enumerate}
+  \item Parámetros por referencia: definición de la función
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+void swap(int *px, int *py)
+{
+  int temp;
+  temp = *px;
+  *px = *py;
+  *py = temp;
+}
+    \end{minted}
+
+  \item Uso de los parámetros por referencia
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+swap(&a, &b);
+    \end{minted}
+
+  \end{enumerate}
+
+\section{La relación entre punteros y arrays}
+
+  \begin{enumerate}
+  \item Puntero al inicio de un array
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int array[8] = {901,902,903,904,905,906,907,908};
+int *pa;
+pa = &array[0];
+    \end{minted}
+
+  \item Acceder a los elementos a través del puntero
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+int array[8] = {901,902,903,904,905,906,907,908};
+int *pa;
+pa = &array[0];
+
+int x = array[5] + array[6];
+int y = *(pa+5) + *(pa+6);
+    \end{minted}
+
+  \item Diferencias entre puntero y array
+    \begin{enumerate}
+    \item Un puntero es una variable, un array es una secuencia de datos contiguos a la que le damos un nombre. Implicaciones:
+
+      \begin{minted}[linenos=true,bgcolor=bg]{c}
+int array[10];
+int *pa = &array[0];
+
+pa = &array[0]; // OK
+pa++; // OK
+array++; // ERROR!
+array = *pa; // ERROR!
+      \end{minted}
+
+    \item La derreferencia de un puntero y un array producen tipos distintos
+
+      \begin{minted}[linenos=true,bgcolor=bg]{c}
+int array[10];
+int *pa = &array[0];
+
+int *(array)[10] = &array;
+int **ppa = &pa;
+      \end{minted}
+
+    \item Un array fuerza la localización de la memoria
+
+      \begin{minted}[linenos=true,bgcolor=bg]{c}
+/* El string se almacena en el ámbito */
+char amessage[] = "programo en C, luego existo";
+/* El string podría estar en cualquier parte
+ de la memoria, aunque el puntero esté dentro
+ de un ámbito */
+char *pmessage = "programo en C, luego existo";
+
+      \end{minted}
+    \item Una función no puede devolver un array (como consecuencia del punto anterior)
+    \end{enumerate}
+
+  \end{enumerate}
+
+\section{La regla \href{http://ieng9.ucsd.edu/~cs30x/rt_lt.rule.html}{Right-Left}}
+Comprobación: \url{http://www.cdecl.org}
+
+\section{Introducción a la memoria dinámica: malloc, free y sizeof}
+
+  \begin{enumerate}
+  \item Operador \textbf{sizeof}
+
+    \begin{minted}[linenos=true,bgcolor=bg]{c}
+size_t s_char = sizeof(char);
+size_t s_int = sizeof(int);
+
+printf("Tamaño en bytes de un char: %d\n", s_char);
+printf("Tamaño bytes de un int: %d\n", s_int);
+    \end{minted}
+
+  \item malloc + free
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+/* Sistema Operativo, dame memoria para 10 ints
+   ...¿Donde viven estos 10 ints? */
+int *ip = malloc(10 * sizeof(int));
+/* Sistema Operativo, ya no voy a usar 
+   esos ints para nada */
+free(ip);
+  \end{minted}
+
+  \item Recuerda: FREE ALL THE MALLOCS!!! FREE ALL THE MALLOCS!!!
+
+  \end{enumerate}
+
+\section{Punteros a punteros}
+
+  \begin{enumerate}
+  \item Un puntero es una variable, así que él mismo está situado en una dirección de memoria
+
+  \item Sintaxis
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+int asdf = 1234;
+int *pa = &asdf;
+int **ppa = &pa;
+  \end{minted}
+
+  \item Puntero a un array
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+float collection[20];
+float (*pcol)[20] = &collection;
+  \end{minted}
+
+  \item Un array de punteros
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+float *pcol[20];
+float asdf = 1.2;
+pcol[0] = &asdf;
+  \end{minted}
+
+  \item Arrays multidimensionales
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+// Array 10 de arrays 10
+double numbers10x10[10][10];
+
+// Array sin inicializar de arrays 10
+double numbersAx10[][10];
+  \end{minted}
+
+  \item Inicialización de un array de punteros
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+char *months[] = {
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+};
+  \end{minted}
+
+  \end{enumerate}
+
+\section{Argumentos de la línea de comandos}
+
+  \begin{enumerate}
+  
+  \item Uso
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+int main(int argc, char *argv[]) {
+  int i;
+  for (i = 0; i < argc; i++) {
+    printf("Argument %d: %s\n", i, argv[i]);
+  }
+  return 0;
+}
+  \end{minted}
+
+  \end{enumerate}
+
+\newpage
+\section{Punteros a funciones}
+
+  \begin{enumerate}
+  
+  \item Sintaxis
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+int foo(char* arg1) {
+  return 1234;
+}
+
+int main(int argc, char **argv) {
+  int (*pfoo)(char*) = foo;
+  printf("Integer: %d\n", pfoo("asdf"));
+  printf("Integer: %d\n", (*pfoo)("asdf"));
+  return 0;
+}
+  \end{minted}
+  
+  \item Uso de \textbf{typedef} para la legibilidad
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+#include <stdio.h>
+
+int foo(char* arg1) {
+  return 1234;
+}
+
+typedef int (*pfoo_t)(char*);
+
+int main(int argc, char **argv) {
+  pfoo_t pfoo = foo;
+  printf("Integer: %d\n", pfoo("asdf"));
+  return 0;
+}
+  \end{minted}
+
+  \end{enumerate}
+
+
+\section{Ejercicios}
+
+  \begin{enumerate}
+  
+  \item Crea una función (y un programa que la demuestre) que divida una cadena de caracteres cada vez que encuentre un caracter que será introducido como parámetro. El resultado será un array con todas las cadenas de caracteres resultantes, que será creada en la memoria dinámica.
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+char **split_with_char (char* text, char separator);
+  \end{minted}
+  
+  \item Crea un programa que muestre en hexadecimal cada uno de los bytes contenidos en un int y en un float. Solicitar estos valores al usuario empleando scanf.
+
+  \item Crea (y demuestra) una función para inicializar un número n de bytes al valor que se desee. Recuerda que el bloque de memoria no está inicializado, y por lo tanto tendrás que reservar la memoria y asignarla al puntero correspondiente.
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+void set_bytes (void **destination,
+                unsigned int num_bytes,
+                char value);
+  \end{minted}
+
+  \item Crea (y demuestra) una función que elimine de una cadena de caracteres, las subcadenas coincidentes con una dada.
+
+  \begin{minted}[linenos=true,bgcolor=bg]{c}
+char* delete_from_string (char* text,
+                          char *str_to_delete);
+  \end{minted}
+
+  \item Crea un generador aleatorio de laberintos de 32x32 como los empleados en ejercicios anteriores.
+
+  \item Busca en internet cómo se realiza la codificación \textbf{base64}. A partir de aquí, Desarrolla una codificación \textbf{base32}, en la que 5 bytes se transforman en 8 caracteres. Elige tu propia codificación, es decir, los 32 caracteres que vas a emplear.
+
+  \item Dada una matriz MxN, busca la submatriz 3x3 cuya sumatorio de los elementos que la forman se la mayor de todas las posibles submatrices.
+
+  \item Implementa la suma, producto vectorial y producto escalar de una matriz 3x3 con su correspondiente operando. Demuestra su funcionamiento con un ejemplo.
+
+  \end{enumerate}
+
+
+\end{document}
